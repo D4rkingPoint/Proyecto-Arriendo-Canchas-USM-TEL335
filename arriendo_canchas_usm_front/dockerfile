@@ -1,0 +1,14 @@
+# pull official base image
+FROM node:lts-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+# RUN npm run build #for prod
+
+CMD [ "sh", "-c", "npm run start" ]

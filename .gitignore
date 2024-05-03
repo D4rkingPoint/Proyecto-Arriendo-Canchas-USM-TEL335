@@ -7,6 +7,16 @@ node_modules/
 *.log
 .env
 
+# Environments
+.env
+.venv
+env/
+venv/
+penv/
+ENV/
+env.bak/
+venv.bak/
+
 # Archivos de sistema
 .DS_Store
 Thumbs.db

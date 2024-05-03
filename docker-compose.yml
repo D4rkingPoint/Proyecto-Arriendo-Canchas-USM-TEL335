@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./arriendo_canchas_usm_back
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/mydb
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./arriendo_canchas_usm_front
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    volumes:
+      - ./arriendo_canchas_usm_front/src:/app/src
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+
+  # nginx:
+  #   image: nginx:latest
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - frontend
+  #     - backend
+
+volumes:
+  db-data:
