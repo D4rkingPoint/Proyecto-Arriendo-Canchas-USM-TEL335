@@ -1,0 +1,31 @@
+# Archivos y directorios generados
+dist/
+build/
+.parcel-cache/
+.vite/
+node_modules/
+*.log
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editor
+.vscode/
+.idea/
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de base de datos
+*.sqlite3
+*.db
+
+# Archivos de Nginx
+nginx.conf
+
+# Archivos de Docker
+.docker/
