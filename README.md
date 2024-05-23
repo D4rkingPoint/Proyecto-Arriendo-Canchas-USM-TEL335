@@ -24,4 +24,3 @@ Integrantes:
 
 ### Mockup del proyecto:
 - https://www.canva.com/design/DAGCnhAUevM/hBfLJneG9dJCqpPbv9jqBg/
-
