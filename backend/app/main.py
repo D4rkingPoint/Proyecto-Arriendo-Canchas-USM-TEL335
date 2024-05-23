@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from .routers import auth, reservations, users
-from database import create_tables
 import uvicorn
 
 

@@ -21,5 +21,5 @@ class Reservation(Base):
     owner = relationship("User", back_populates="reservations")
 
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
