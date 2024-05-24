@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import api from '../api';
+import Logo from '../styles/img/Logo_UTFSM.png';
 
 function Reservations() {
   const [reservations, setReservations] = useState([]);
   const [sport, setSport] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -38,32 +41,94 @@ function Reservations() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    history.push('/login');
+  };
+
+  const containerStyle = {
+    border: '1px solid #000',
+    padding: '20px',
+    height: 'auto',
+    backgroundColor: 'whitesmoke',
+    marginTop: '0px',
+    position: 'relative',
+  };
+
+  const logoStyle = {
+    width: '150px',
+    position: 'absolute',
+    top: '10px',
+    left: '10px',
+  };
+
+  const logoutButtonStyle = {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    padding: '10px 20px',
+    backgroundColor: 'floralwhite',
+    color: 'black',
+    border: 'none',
+    cursor: 'pointer',
+    borderRadius: '5px',
+  };
+
   return (
     <div>
-      <h2>Reservations</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Sport:
-          <input type="text" value={sport} onChange={(e) => setSport(e.target.value)} required />
-        </label>
-        <label>
-          Start Time:
-          <input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-        </label>
-        <label>
-          End Time:
-          <input type="datetime-local" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-        </label>
-        <button type="submit">Create Reservation</button>
-      </form>
-      <h3>Existing Reservations</h3>
-      <ul>
-        {reservations.map((reservation) => (
-          <li key={reservation.id}>
-            {reservation.sport} - {new Date(reservation.start_time).toLocaleString()} to {new Date(reservation.end_time).toLocaleString()}
-          </li>
-        ))}
-      </ul>
+      <a href="/">
+        <img src={Logo} alt="Logo UTFSM" style={logoStyle} />
+      </a>
+      <div style={containerStyle}>
+        <button style={logoutButtonStyle} onClick={handleLogout}>Cerrar sesión</button>
+        <h1>Reservaciones</h1>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <label>
+                    Deporte:
+                    <select value={sport} onChange={(e) => setSport(e.target.value)} required>
+                      <option value="" disabled>Selecciona un deporte</option>
+                      <option value="Fútbol">Fútbol</option>
+                      <option value="Baloncesto">Bascketball</option>
+                    </select>
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Hora de inicio:
+                    <input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Hora de fin:
+                    <input type="datetime-local" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <br />
+        <button type="submit" onClick={handleSubmit} style={{ width: '100%' }}>
+          Envía tu reserva para ser procesada
+        </button>
+        <h3>Reservaciones existentes</h3>
+        <ul>
+          {reservations.map((reservation) => (
+            <li key={reservation.id}>
+              {reservation.sport} - {new Date(reservation.start_time).toLocaleString()} a {new Date(reservation.end_time).toLocaleString()}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
