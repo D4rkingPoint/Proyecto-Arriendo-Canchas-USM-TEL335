@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../api';
+import Logo from '../styles/img/Logo_UTFSM.png';
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -17,22 +18,56 @@ function Register() {
     }
   };
 
+  const containerStyle = {
+    border: '1px solid #000',
+    padding: '20px',
+    height:'auto',
+    backgroundColor: 'whitesmoke',
+    marginTop: '0px'
+  };
+
+  const logoStyle = {
+    display: 'block',
+    margin: '0 auto',
+    maxWidth: '200px',
+    height: 'auto',
+    marginTop: '20px'
+  };
+
   return (
     <div>
-      <h2>Registrarse</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Correo:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
-        <label>
-        Contraseña:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </label>
-      <button type="submit">Registrarse</button>
-    </form>
-  </div>
-);
+      <a href="/">
+        <img src={Logo} alt="Logo UTFSM" style={logoStyle} />
+      </a>
+      <div style={containerStyle} className="container">
+        <h1>Crea una cuenta para comenzar</h1>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <table>
+            <tbody>
+              <tr>
+                <td>Correo:</td>
+                <td>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </td>
+              </tr>
+              <tr>
+                <td>Contraseña:</td>
+                <td>
+                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <button type="submit" onSubmit={handleSubmit} style={{ width: '100%' }}>Registrarse</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <span onClick={() => history.push('/login')} style={{ color: 'blue', cursor: 'pointer' }}>¿Ya tienes una cuenta? Haz click acá para iniciar sesión</span>
+      </div>
+    </div>
+  );
 }
 
 export default Register;

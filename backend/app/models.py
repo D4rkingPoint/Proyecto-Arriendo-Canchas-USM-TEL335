@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from .database import Base, engine
+from .database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -19,7 +19,3 @@ class Reservation(Base):
     end_time = Column(DateTime)
     user_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="reservations")
-
-
-#Base.metadata.create_all(bind=engine)
-
