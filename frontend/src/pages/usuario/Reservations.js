@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import api from '../api';
-import Logo from '../styles/img/Logo_UTFSM.png';
+import api from '../../api'
+import Logo from '../../styles/img/Logo_UTFSM.png';
+import Navbar from '../../components/Navbar';
 
 function Reservations() {
   const [reservations, setReservations] = useState([]);
@@ -76,9 +77,7 @@ function Reservations() {
 
   return (
     <div>
-      <a href="/">
-        <img src={Logo} alt="Logo UTFSM" style={logoStyle} />
-      </a>
+      <Navbar />
       <div style={containerStyle}>
         <button style={logoutButtonStyle} onClick={handleLogout}>Cerrar sesión</button>
         <h1>Reservaciones</h1>

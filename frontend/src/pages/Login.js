@@ -69,7 +69,7 @@ function Login() {
         <br />
         <span onClick={() => history.push('/password-recovery')} style={{ color: 'blue', cursor: 'pointer' }}>Recuperar contraseña</span>
         <br />
-        <button type="button" onClick={() => history.push('Reservations')} style={{ width: '100%', marginTop: '20px', padding: '10px 20px' }}>Supongamos que te logeaste...supongamos</button>
+        <button type="button" onClick={() => history.push('/usuario/home_usuario')} style={{ width: '100%', marginTop: '20px', padding: '10px 20px' }}>Supongamos que te logeaste...supongamos</button>
       </div>
     </div>
   );
