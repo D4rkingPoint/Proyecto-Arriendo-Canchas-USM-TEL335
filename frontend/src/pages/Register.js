@@ -21,9 +21,12 @@ function Register() {
   const containerStyle = {
     border: '1px solid #000',
     padding: '20px',
-    height:'auto',
+    height: 'auto',
     backgroundColor: 'whitesmoke',
-    marginTop: '0px'
+    marginTop: '20px',  // Ajustar el margen superior para separar del logo
+    width: '300px',     // Ajustar el ancho del contenedor
+    margin: '20px auto', // Centrar el contenedor horizontalmente
+    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' // Añadir sombra para mejorar la apariencia
   };
 
   const logoStyle = {
