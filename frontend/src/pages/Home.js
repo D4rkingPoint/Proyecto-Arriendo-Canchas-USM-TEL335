@@ -39,7 +39,11 @@ function Home() {
   return (
     <div style={containerStyle}>
       <h1 style={{ fontFamily: 'Rockwell, serif', fontSize: '40px' }}>Bienvenido a nuestro Sistema de Reservas USM!</h1>
-      <img src={require('../styles/img/logo.JPG')} style={{ width: '25%', height: '25%',borderRadius: '20%' }} />
+      <img
+        src={require('../styles/img/logo.JPG')}
+        alt="Descripción del logotipo"
+        style={{ width: '25%', height: '25%', borderRadius: '20%' }}
+      />
       <h2 style={{ fontFamily: 'Rockwell, serif' }}>Ingresa a nuestro portal</h2>
 
       

@@ -1,0 +1,59 @@
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #333; /* Color de fondo de la barra de navegación */
+    padding: 10px 20px; /* Espaciado interno de la barra de navegación */
+    display: flex; /* Utiliza flexbox para alinear los elementos */
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: center; /* Alinea los elementos verticalmente */
+    position: fixed; /* Hace que la barra de navegación esté fija en la parte superior */
+    top: 0; /* Posición en la parte superior */
+    width: 100%; /* Ocupa todo el ancho de la ventana */
+    z-index: 1000; /* Asegura que la barra de navegación esté por encima de otros elementos */
+    height: 60px; /* Define una altura fija menor para la barra de navegación */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Añade una ligera sombra para el efecto */
+}
+
+/* Estilos para los elementos de la barra de navegación */
+.navbar ul {
+    list-style-type: none; /* Elimina los estilos de lista predeterminados */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Utiliza flexbox para alinear los elementos en línea */
+    align-items: center; /* Alinea los elementos verticalmente */
+}
+
+.navbar ul li {
+    margin-right: 20px; /* Espacio entre los elementos de la lista */
+}
+
+.navbar ul li:last-child {
+    margin-right: 50px; /* Elimina el margen derecho del último elemento de la lista */
+}
+
+/* Estilos para los enlaces de navegación */
+.navbar ul li a {
+    color: #fff; /* Color del texto de los enlaces */
+    text-decoration: none; /* Elimina el subrayado */
+    font-size: 16px; /* Tamaño de fuente */
+    font-family: 'Arial', sans-serif; /* Fuente */
+    transition: color 0.3s ease; /* Transición suave para el efecto hover */
+}
+
+.navbar ul li a:hover {
+    color: #ffcc00; /* Color del texto al pasar el cursor */
+}
+
+/* Estilos para el logo */
+.navbar img {
+    max-width: 80px; /* Reduce el tamaño máximo del logo */
+    height: auto;
+}
+
+/* Estilo para compensar el espacio ocupado por la barra de navegación fija */
+body {
+    padding-top: 70px; /* Ajusta este valor según la nueva altura de tu barra de navegación */
+    font-family: 'Arial', sans-serif; /* Fuente para el cuerpo del documento */
+    background-color: #f4f4f4; /* Color de fondo del cuerpo */
+}
+
+  

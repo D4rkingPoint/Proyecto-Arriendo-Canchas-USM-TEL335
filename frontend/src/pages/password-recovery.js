@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import api from '../api';
+//import api from '../api';
 import Logo from '../styles/img/Logo_UTFSM.png';
 
 function PasswordRecovery() {
