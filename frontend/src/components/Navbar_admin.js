@@ -6,7 +6,7 @@ import '../styles/navbar.css'; // Importa el archivo CSS para los estilos de la 
 function Navbar_admin() {
   return (
     <div className="navbar">
-      <Link to="/">
+      <Link to="/admin/estadisticas">
         <img src={Logo} alt="Logo UTFSM" />
       </Link>
       <nav>
@@ -15,7 +15,7 @@ function Navbar_admin() {
           <li><Link to="/admin/gestionUsuarios">Gestión de Usuarios</Link></li>
           <li><Link to="/admin/gestionCanchas"><i className="fa fa-bell"></i>Gestión de Canchas</Link></li>
           <li><Link to="/admin/notificationAdmin">Notificaciones</Link></li>
-          <li><Link to="/admin/logoutAdmin">Cerrar Sesión</Link></li>
+          <li><Link to="/logout">Cerrar Sesión</Link></li>
         </ul>
       </nav>
     </div>

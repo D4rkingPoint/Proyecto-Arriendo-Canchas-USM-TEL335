@@ -2,6 +2,38 @@ import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
 
 function Profile() {
+  /** con las apis
+   * function Profile() {
+  const [activeReservations, setActiveReservations] = useState([]);
+  const [reservationHistory, setReservationHistory] = useState([]);
+
+  useEffect(() => {
+    async function fetchReservations() {
+      try {
+        const activeResponse = await api.get('/reservations/active');
+        const historyResponse = await api.get('/reservations/history');
+        setActiveReservations(activeResponse.data);
+        setReservationHistory(historyResponse.data);
+      } catch (error) {
+        console.error('Error fetching reservations', error);
+      }
+    }
+
+    fetchReservations();
+  }, []);
+
+  const cancelReservation = async (id) => {
+    if (window.confirm('¿Está seguro de que desea cancelar la reserva?')) {
+      try {
+        await api.delete(`/reservations/${id}`);
+        setActiveReservations(activeReservations.filter(res => res.id !== id));
+        alert('Reserva cancelada con éxito');
+      } catch (error) {
+        console.error('Error canceling reservation', error);
+      }
+    }
+  };
+  */
   const [activeReservations, setActiveReservations] = useState([
     // Ejemplo de datos de reservaciones activas
     { id: 1, cancha: 'Cancha 1', fecha: '2024-05-25' },
