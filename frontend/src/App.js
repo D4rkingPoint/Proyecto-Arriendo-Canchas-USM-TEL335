@@ -15,6 +15,7 @@ import Estadisticas_Administrador from './pages/Administrador/Estadisticas_Admin
 import Gestion_Canchas from './pages/Administrador/Gestion_Canchas'
 import Gestion_Usuarios from './pages/Administrador/Gestion_Usuarios'
 import Notifications_admin from './pages/Administrador/Notifications_admin'
+import Agregar from './pages/Administrador/Agregar'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/admin/gestionCanchas" component={Gestion_Canchas} />
         <Route path="/admin/gestionUsuarios" component={Gestion_Usuarios} />
         <Route path="/admin/notificationAdmin" component={Notifications_admin} />
+        <Route path="/admin/agregar" component={Agregar} />
         <Route path="/" component={Home} />
       </Switch>
     </div>

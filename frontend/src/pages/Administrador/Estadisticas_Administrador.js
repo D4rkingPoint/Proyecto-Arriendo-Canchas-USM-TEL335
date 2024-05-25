@@ -8,4 +8,4 @@ function Estadisticas_Administrador() {
   );
 }
 
-export default Estadisticas_Administrador;
+export default Estadisticas_Administrador
