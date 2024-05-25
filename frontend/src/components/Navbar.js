@@ -6,7 +6,7 @@ import '../styles/navbar.css'; // Importa el archivo CSS para los estilos de la 
 function Navbar() {
   return (
     <div className="navbar">
-      <Link to="/">
+      <Link to="/usuario/home_usuario">
         <img src={Logo} alt="Logo UTFSM" />
       </Link>
       <nav>
@@ -15,7 +15,7 @@ function Navbar() {
           <li><Link to="/usuario/reservations">Mis Reservas</Link></li>
           <li><Link to="/usuario/notifications"><i className="fa fa-bell"></i> Notificaciones</Link></li>
           <li><Link to="/usuario/profile">Perfil</Link></li>
-          <li><Link to="/usuario/logout">Cerrar Sesión</Link></li>
+          <li><Link to="/logout">Cerrar Sesión</Link></li>
         </ul>
       </nav>
     </div>
