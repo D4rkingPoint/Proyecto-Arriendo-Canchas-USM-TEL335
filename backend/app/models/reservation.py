@@ -7,6 +7,7 @@ class Reservation(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"))
     cancha_id = Column(Integer, ForeignKey("cancha.id"))
+    reserva_time = Column(DateTime, nullable=False)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     estado = Column(String, index=True, nullable=False)

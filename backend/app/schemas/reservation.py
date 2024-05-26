@@ -4,9 +4,9 @@ from datetime import datetime
 class ReservationBase(BaseModel):
     user_id: int
     cancha_id: int
-    fecha_reserva: datetime
-    hora_inicio: str
-    hora_fin: str
+    reserva_time: datetime
+    start_time: datetime
+    end_time: datetime
 
 class ReservationCreate(ReservationBase):
     pass
