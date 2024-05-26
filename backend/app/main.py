@@ -1,12 +1,10 @@
 from fastapi import FastAPI
-from .routers import auth, reservations, users
-from database import create_tables
 import uvicorn
-
+from app.api.v1.endpoints import user, reservation, cancha, auth
 
 app = FastAPI()
 
-app.include_router(auth.router)
-app.include_router(reservations.router)
-app.include_router(users.router)
-
+app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
+app.include_router(user.router, prefix="/api/v1/users", tags=["users"])
+app.include_router(reservation.router, prefix="/api/v1/reservations", tags=["reservations"])
+app.include_router(cancha.router, prefix="/api/v1/canchas", tags=["canchas"])

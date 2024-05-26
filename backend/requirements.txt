@@ -7,3 +7,6 @@ email-validator
 passlib[bcrypt]
 jose
 pyjwt
+python-dotenv
+asyncpg
+alembic
