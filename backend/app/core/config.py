@@ -1,4 +1,5 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+
 from cryptography.fernet import Fernet
 
 class Settings(BaseSettings):
