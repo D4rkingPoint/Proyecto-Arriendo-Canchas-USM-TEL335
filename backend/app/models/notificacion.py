@@ -5,7 +5,7 @@ from app.db.base_class import Base
 class Notificacion(Base):
     __tablename__ = "notificacion"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
     tipo = Column(String)
     mensaje = Column(String)
     fecha_envio = Column(DateTime)
