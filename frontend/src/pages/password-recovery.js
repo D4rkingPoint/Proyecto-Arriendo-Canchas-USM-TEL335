@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import api from '../api';
+//import api from '../api';
 import Logo from '../styles/img/Logo_UTFSM.png';
 
-function Register() {
+function PasswordRecovery() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await api.post('/auth/register', { email, password });
+      // Lógica para enviar solicitud de recuperación de contraseña
+      // await api.post('/auth/password-recovery', { email });
+      // Lógica para manejar la respuesta de la solicitud de recuperación de contraseña
       history.push('/login');
     } catch (error) {
-      console.error("Registro fallido", error);
+      console.error("Solicitud de recuperación de contraseña fallida", error);
     }
   };
 
@@ -37,40 +38,31 @@ function Register() {
     marginTop: '20px'
   };
 
+  const inputAndButtonStyle = {
+    width: '100%',
+    marginBottom: '10px'
+  };
+
   return (
     <div>
       <a href="/">
         <img src={Logo} alt="Logo UTFSM" style={logoStyle} />
       </a>
       <div style={containerStyle} className="container">
-        <h1>Crea una cuenta para comenzar</h1>
+        <h1>Recuperación de Contraseña</h1>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <table>
-            <tbody>
-              <tr>
-                <td>Correo:</td>
-                <td>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </td>
-              </tr>
-              <tr>
-                <td>Contraseña:</td>
-                <td>
-                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  <button type="submit" onSubmit={handleSubmit} style={{ width: '100%' }}>Registrarse</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <label>
+              Correo Electrónico:
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputAndButtonStyle} />
+            </label>
+            <button type="submit" style={inputAndButtonStyle}>Enviar Solicitud de Recuperación</button>
+          </form>
         </div>
-        <span onClick={() => history.push('/login')} style={{ color: 'blue', cursor: 'pointer' }}>¿Ya tienes una cuenta? Haz click acá para iniciar sesión</span>
+        <span onClick={() => history.push('/login')} style={{ color: 'blue', cursor: 'pointer' }}>Volver al Inicio de Sesión</span>
       </div>
     </div>
   );
 }
 
-export default Register;
+export default PasswordRecovery;

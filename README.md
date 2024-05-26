@@ -24,3 +24,8 @@ Integrantes:
 
 ### Mockup del proyecto:
 - https://www.canva.com/design/DAGCnhAUevM/hBfLJneG9dJCqpPbv9jqBg/
+
+### Ejecución y Requerimientos
+
+- Para ejecutar el proyecto se necesitan las herramientas, docker y docker-compose, nodejs
+- Para la ejecución abrir docker y en la terminal (carpeta raiz utilizar docker-compose up built)
