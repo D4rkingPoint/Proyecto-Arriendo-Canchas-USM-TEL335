@@ -2,7 +2,23 @@ from fastapi import FastAPI
 import uvicorn
 from app.api.v1.endpoints import user, reservation, cancha, auth
 
-app = FastAPI()
+
+description = """
+Este es el backend del codigo base para el curso de TEL335
+
+"""
+
+tags_metadata = [
+    {
+        "name": "users",
+        "description": "Operations with users. The **login** logic is also here.",
+    },
+]
+
+app = FastAPI(title="BackEnd grupo WebOs",
+              description=description,
+              version="0.1", openapi_tags=tags_metadata)
+
 
 app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
 app.include_router(user.router, prefix="/api/v1/users", tags=["users"])
