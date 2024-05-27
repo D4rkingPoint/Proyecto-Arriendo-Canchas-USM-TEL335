@@ -4,7 +4,7 @@ from typing import List
 
 from app.db.session import get_db
 from app.schemas.user import UserCreate, User
-from app.crud.user import get_user, get_user_by_email, create_user
+from app.crud.user import get_user, get_user_by_email , create_user
 
 router = APIRouter()
 

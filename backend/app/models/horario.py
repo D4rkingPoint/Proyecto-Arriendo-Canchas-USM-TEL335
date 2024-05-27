@@ -11,4 +11,4 @@ class Horario(Base):
     end_time = Column(DateTime)
     estado = Column(Boolean, default=True)
 
-    cancha = relationship("cancha", back_populates="horarios")
+    cancha = relationship("Cancha")

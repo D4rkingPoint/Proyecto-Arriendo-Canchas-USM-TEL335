@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 641569e24b8a
+Revision ID: 5f3cd04c5383
 Revises: 
-Create Date: 2024-05-26 15:36:08.678074
+Create Date: 2024-05-26 23:27:03.425976
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '641569e24b8a'
+revision: str = '5f3cd04c5383'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,24 +32,46 @@ def upgrade() -> None:
     op.create_index(op.f('ix_cancha_id'), 'cancha', ['id'], unique=False)
     op.create_index(op.f('ix_cancha_tipo'), 'cancha', ['tipo'], unique=False)
     op.create_index(op.f('ix_cancha_ubicacion'), 'cancha', ['ubicacion'], unique=False)
-    op.create_table('user',
+    op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
-    op.create_index(op.f('ix_user_id'), 'user', ['id'], unique=False)
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
+    op.create_table('horario',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('cancha_id', sa.Integer(), nullable=True),
+    sa.Column('fecha', sa.DateTime(), nullable=True),
+    sa.Column('start_time', sa.DateTime(), nullable=True),
+    sa.Column('end_time', sa.DateTime(), nullable=True),
+    sa.Column('estado', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['cancha_id'], ['cancha.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_horario_id'), 'horario', ['id'], unique=False)
+    op.create_table('notificacion',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('tipo', sa.String(), nullable=True),
+    sa.Column('mensaje', sa.String(), nullable=True),
+    sa.Column('fecha_envio', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_notificacion_id'), 'notificacion', ['id'], unique=False)
     op.create_table('reservation',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('cancha_id', sa.Integer(), nullable=True),
+    sa.Column('reserva_time', sa.DateTime(), nullable=False),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('end_time', sa.DateTime(), nullable=False),
     sa.Column('estado', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['cancha_id'], ['cancha.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_reservation_estado'), 'reservation', ['estado'], unique=False)
@@ -62,9 +84,13 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_reservation_id'), table_name='reservation')
     op.drop_index(op.f('ix_reservation_estado'), table_name='reservation')
     op.drop_table('reservation')
-    op.drop_index(op.f('ix_user_id'), table_name='user')
-    op.drop_index(op.f('ix_user_email'), table_name='user')
-    op.drop_table('user')
+    op.drop_index(op.f('ix_notificacion_id'), table_name='notificacion')
+    op.drop_table('notificacion')
+    op.drop_index(op.f('ix_horario_id'), table_name='horario')
+    op.drop_table('horario')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
     op.drop_index(op.f('ix_cancha_ubicacion'), table_name='cancha')
     op.drop_index(op.f('ix_cancha_tipo'), table_name='cancha')
     op.drop_index(op.f('ix_cancha_id'), table_name='cancha')

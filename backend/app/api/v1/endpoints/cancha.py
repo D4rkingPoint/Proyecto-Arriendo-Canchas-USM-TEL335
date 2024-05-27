@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
 from app.db.session import get_db
-from app.schemas.cancha import CanchaCreate, CanchaUpdate, Cancha
-from app.crud.cancha import get_cancha, get_canchas, create_cancha, update_cancha, delete_cancha
+from app.schemas.cancha import CanchaUpdate, Cancha , CanchaCreate
+from app.crud.cancha import get_cancha, get_canchas,  update_cancha, delete_cancha , create_cancha
 
 router = APIRouter()
 
@@ -18,6 +18,7 @@ async def read_cancha(cancha_id: int, db: AsyncSession = Depends(get_db)):
     if db_cancha is None:
         raise HTTPException(status_code=404, detail="Cancha not found")
     return db_cancha
+
 
 @router.post("/", response_model=Cancha)
 async def create_new_cancha(cancha: CanchaCreate, db: AsyncSession = Depends(get_db)):

@@ -1,16 +1,21 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
-
+# Modelo base para User
 class UserBase(BaseModel):
-    email: EmailStr
+    email: str
+    is_active: bool
 
+# Modelo para crear un nuevo User
 class UserCreate(UserBase):
     hashed_password: str
 
+# Modelo para actualizar un User existente
+class UserUpdate(UserBase):
+    hashed_password: str
+
+# Modelo para representar un User con un ID
 class User(UserBase):
     id: int
-    is_active: bool
-    is_admin: bool
 
     class Config:
         orm_mode = True

@@ -1,7 +1,7 @@
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.cancha import Cancha
-from app.schemas.cancha import CanchaCreate, CanchaUpdate
+from app.schemas.cancha import CanchaUpdate , CanchaCreate
 
 async def get_cancha(db: AsyncSession, cancha_id: int):
     result = await db.execute(select(Cancha).where(Cancha.id == cancha_id))
