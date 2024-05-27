@@ -10,4 +10,4 @@ class Notificacion(Base):
     mensaje = Column(String)
     fecha_envio = Column(DateTime)
 
-    user = relationship("user", back_populates="notificacions")
+    user = relationship("User", back_populates="notificacion")

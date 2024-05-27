@@ -1,6 +1,5 @@
 from pydantic import BaseModel, EmailStr
 
-
 class UserBase(BaseModel):
     email: EmailStr
 
@@ -13,4 +12,4 @@ class User(UserBase):
     is_admin: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True 

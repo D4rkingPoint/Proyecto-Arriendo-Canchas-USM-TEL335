@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
 class Reservation(Base):
+    __tablename__ = "reservations"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"))
@@ -12,5 +13,5 @@ class Reservation(Base):
     end_time = Column(DateTime, nullable=False)
     estado = Column(String, index=True, nullable=False)
 
-    user = relationship("user", back_populates="reservations")
-    cancha = relationship("cancha", back_populates="reservations")
+    user = relationship("User", back_populates="reservations")
+    cancha = relationship("Cancha", back_populates="reservations")

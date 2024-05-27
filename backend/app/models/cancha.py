@@ -10,6 +10,7 @@ class Cancha(Base):
     fotografia = Column(String, index=True)
     estado_disponibilidad = Column(Boolean, default=True)
 
-    reservations = relationship("reservation", back_populates="cancha")
+    reservations = relationship("Reservation", back_populates="cancha")
+    horarios = relationship("Horario", back_populates="cancha")
     
     

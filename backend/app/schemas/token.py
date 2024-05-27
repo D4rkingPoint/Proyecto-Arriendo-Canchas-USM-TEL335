@@ -1,8 +1,9 @@
 from pydantic import BaseModel
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+from typing import List
 
 class TokenData(BaseModel):
-    email: str | None = None
+    user_id: int
+    roles: List[str]
+    
+class Token(BaseModel):
+    token: str
