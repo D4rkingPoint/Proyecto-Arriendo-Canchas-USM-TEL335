@@ -23,4 +23,28 @@ exports.create = async ( request, response ) => {
       .then( newReserve => response.status( 201 ).send( newReserve ) )
       .catch( error => response.status( 400 ).send( error ) )
     );
-}
+};
+
+
+exports.update = async (request, response) => {
+  return await Reservation.update( {
+    fecha: request.body.fecha,
+    bloque: request.body.bloque,
+    estado: request.body.estado,
+    userId: request.userId
+  } , {})
+  .then( newReserve => Reservation.findByPk( newReserve.id, {} )
+    .then( newReserve => response.status( 200 ).send( newReserve ) )
+    .catch( error => response.status( 400 ).send( error ) )
+  );
+};
+
+exports.delete = async (request, response) => {
+  return await Reservation.destroy( {
+    where: {
+      id: request.params.reservationId
+    }
+  } )
+   .then( () => response.status( 204 ).send() )
+   .catch( error => response.status( 400 ).send( error ) );
+};
