@@ -5,9 +5,9 @@ const jwt = require( "jsonwebtoken" );
 const bcrypt = require( "bcryptjs" );
 
 exports.signUp = ( request, response ) => {
-    console.log(request)
+    console.log(request.body)
     return User.create( {
-        nombre: request.body.name,
+        nombre: request.body.nombre,
         apellido: request.body.apellido,
         email: request.body.email,
         password: bcrypt.hashSync( request.body.password, 8 ),
@@ -19,7 +19,8 @@ exports.signUp = ( request, response ) => {
 }
 
 exports.signIn = ( request, response ) => {
-  const signInError = { accessToken: null, error: "Invalid email or password" }; 
+    console.log(response);
+    const signInError = { accessToken: null, error: "Invalid email or password" }; 
   return User.findOne( { where: { email: request.body.email } } )
     .then( user => {
         if ( !user ) return response.status( 401 ).send( signInError );

@@ -27,7 +27,7 @@ function Home_Usuario() {
         console.error('Error fetching canchas', error);
       }
     }
-
+      // Realizar endpoint - responder con el formato de arriba. 
     fetchCanchas();
   }, []);
 

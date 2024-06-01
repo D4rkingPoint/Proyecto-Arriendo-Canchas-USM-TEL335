@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import api from '../api';
+import api from '../api';  // Asegúrate de que el archivo api.js esté correctamente configurado.
 import Logo from '../styles/img/Logo_UTFSM.png';
 
 function Register() {
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
-      await api.post('/auth/register', { email, password });
+      await api.post('/auth/signup', { nombre, apellido, email, password });
       history.push('/login');
     } catch (error) {
       console.error("Registro fallido", error);
@@ -23,10 +24,10 @@ function Register() {
     padding: '20px',
     height: 'auto',
     backgroundColor: 'whitesmoke',
-    marginTop: '20px',  // Ajustar el margen superior para separar del logo
-    width: '300px',     // Ajustar el ancho del contenedor
-    margin: '20px auto', // Centrar el contenedor horizontalmente
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' // Añadir sombra para mejorar la apariencia
+    marginTop: '20px',
+    width: '300px',
+    margin: '20px auto',
+    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
   };
 
   const logoStyle = {
@@ -48,6 +49,18 @@ function Register() {
           <table>
             <tbody>
               <tr>
+                <td>Nombre:</td>
+                <td>
+                  <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+                </td>
+              </tr>
+              <tr>
+                <td>Apellido:</td>
+                <td>
+                  <input type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
+                </td>
+              </tr>
+              <tr>
                 <td>Correo:</td>
                 <td>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -61,13 +74,15 @@ function Register() {
               </tr>
               <tr>
                 <td colSpan="2">
-                  <button type="submit" onSubmit={handleSubmit} style={{ width: '100%' }}>Registrarse</button>
+                  <button type="button" onClick={handleSubmit} style={{ width: '100%' }}>Registrarse</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <span onClick={() => history.push('/login')} style={{ color: 'blue', cursor: 'pointer' }}>¿Ya tienes una cuenta? Haz click acá para iniciar sesión</span>
+        <span onClick={() => history.push('/login')} style={{ color: 'blue', cursor: 'pointer' }}>
+          ¿Ya tienes una cuenta? Haz click acá para iniciar sesión
+        </span>
       </div>
     </div>
   );

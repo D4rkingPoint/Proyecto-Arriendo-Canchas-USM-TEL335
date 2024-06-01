@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../api';
 import Logo from '../styles/img/Logo_UTFSM.png';
@@ -9,11 +9,14 @@ function Login() {
   const history = useHistory();
 
   const handleSubmit = async (event) => {
+    console.log(email,password)
     event.preventDefault();
     try {
-      const response = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', response.data.access_token);
-      history.push('/');
+      
+      const response = await api.post('/auth/signin', { email, password });
+      console.log(response.data.accessToken)
+      localStorage.setItem('token', response.data.accessToken);
+      history.push('/usuario/Home_Usuario');
     } catch (error) {
       console.error("Inicio de sesión fallido", error);
     }
@@ -63,7 +66,7 @@ function Login() {
                 </tr>
                 <tr>
                   <td colSpan="2">
-                    <button type="submit" style={{ width: '100%' }}>Iniciar sesión</button>
+                  <button type="button" onClick={handleSubmit} style={{ width: '100%' }}>Iniciar Sesión</button>
                   </td>
                 </tr>
               </tbody>

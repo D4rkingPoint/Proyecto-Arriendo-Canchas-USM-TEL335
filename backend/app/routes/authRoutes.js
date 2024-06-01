@@ -8,6 +8,6 @@ module.exports = app => {
     );
     next();
   } );
-  app.post( "/signup", [ verifySignUp.checkForDuplicateEmail ], authController.signUp );
-  app.post( "/signin", authController.signIn );
+  app.post( "/auth/signup", [ verifySignUp.checkForDuplicateEmail ], authController.signUp );
+  app.post( "/auth/signin", authController.signIn );
 };
