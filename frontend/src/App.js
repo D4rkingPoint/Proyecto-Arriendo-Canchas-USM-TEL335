@@ -23,7 +23,7 @@ function App() {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
-        <Route path="/usuario/reservations" component={Reservations} />
+        <Route path="/usuario/reservations/:canchaId" component={Reservations} />
         <Route path="/password-recovery" component={PasswordRecovery} />
         <Route path="/usuario/home_usuario" component={Home_Usuario} />
         <Route path="/usuario/notifications" component={Notificacions} />

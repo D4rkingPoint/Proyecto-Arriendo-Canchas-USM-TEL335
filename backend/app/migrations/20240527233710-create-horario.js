@@ -19,11 +19,11 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      start_time: {
-        type: Sequelize.DATEONLY
+      dia: {
+        type: Sequelize.STRING
       },
-      end_time: {
-        type: Sequelize.DATEONLY
+      bloque: {
+        type: Sequelize.STRING
       },
       estado: {
         type: Sequelize.BOOLEAN,

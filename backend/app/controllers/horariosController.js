@@ -1,7 +1,20 @@
 const { Horario } = require('../models');
 
-exports.show = (request, response) => {
-    return Horario.findByPk(request.params.horario.Id,{})
+
+exports.showAll = (request, response) => {
+
+    return Horario.findAll({})
+    .then( horario => {
+        if (horario.length === 0) {
+            return response.status(404).send({ message: 'No se encontraron Horarios' });
+        }
+        response.status(200).send({ horario });
+    })
+    .catch(error => response.status(400).send(error));
+};
+
+exports.showCancha = (request, response) => {
+    return Horario.findAll({ where: {canchaId :request.query.canchaId}})
     .then(horario => {
         if(!horario){
             response.status(404).send({error: "Horario doesnt exist" });}
@@ -11,10 +24,11 @@ exports.show = (request, response) => {
 };
 
 exports.create = async (request, response) => {
+    console.log(request.body)
     return await Horario.create({
-        cancahaId: request.params.horario.canchaId,
-        start_time: request.body.start_time,
-        end_time: request.body.end_time,
+        canchaId: request.body.canchaId,
+        dia: request.body.dia,
+        bloque: request.body.bloque,
         estado: 1
     },{})
     .then(newHorario => Horario.findByPk(newHorario.Id,{}))
@@ -25,8 +39,6 @@ exports.create = async (request, response) => {
 exports.update = async (request, response) => {
     return await Horario.update({
         cancahaId: request.params.horario.canchaId,
-        start_time: request.body.start_time,
-        end_time: request.body.end_time,
         estado: request.body.estado,
     },{})
     .then(newHorario => Horario.findByPk(newHorario.Id,{}))

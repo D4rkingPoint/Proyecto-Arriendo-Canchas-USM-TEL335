@@ -9,34 +9,53 @@ function Reservations() {
   const { canchaId } = useParams();
   const history = useHistory();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [bloques, setBloques] = useState([]);
+  const [horarios, setHorarios] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [selectedBloque, setSelectedBloque] = useState(null);
 
   useEffect(() => {
-    async function fetchBloques() {
+    async function fetchHorarios() {
       try {
-        const response = await api.get(`/reservations/${canchaId}/bloques`, {
-          params: { date: selectedDate.toISOString().split('T')[0] },
+        const response = await api.get(`/horariosCancha`, {
+          params: { canchaId },
         });
-        setBloques(response.data);
+        setHorarios(response.data);
       } catch (error) {
-        console.error('Error fetching bloques', error);
+        console.error('Error fetching horarios', error);
       }
     }
 
-    fetchBloques();
+    async function fetchReservations() {
+      try {
+        const response = await api.get(`/reservations`, {
+          params: { canchaId, date: selectedDate.toISOString().split('T')[0] },
+        });
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Error fetching reservations', error);
+      }
+    }
+    fetchHorarios();
+    fetchReservations();
   }, [selectedDate, canchaId]);
 
-  const handleReservation = () => {
-    if (window.confirm('¿Estás seguro de que deseas realizar la reserva de esta cancha?')) {
+  const handleReservation = async () => {
+    if (selectedBloque && window.confirm('¿Estás seguro de que deseas realizar la reserva de esta cancha?')) {
       try {
-        // Aquí iría la lógica para hacer la reserva en la base de datos
+        await api.post('/reservations', {
+          fecha: selectedDate.toISOString().split('T')[0],
+          bloque: selectedBloque,
+        });
         alert('Reservación exitosa. Se envió un correo con la confirmación de la reserva');
-        // Aquí podrías redirigir a otra página o actualizar el estado según sea necesario
+        history.push('/usuario/home_usuario');
       } catch (error) {
         console.error('Error making reservation', error);
       }
     }
+  };
+
+  const isBlockReserved = (bloque) => {
+    return reservations.some(reservation => reservation.bloque === bloque);
   };
 
   return (
@@ -49,21 +68,47 @@ function Reservations() {
           onChange={date => setSelectedDate(date)}
           dateFormat="yyyy-MM-dd"
         />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-          {bloques.map(bloque => (
-            <div
-              key={bloque.id}
-              style={{
-                border: '1px solid #ccc',
-                padding: '10px',
-                cursor: 'pointer',
-                backgroundColor: bloque.reservado ? 'red' : selectedBloque === bloque.id ? 'green' : 'white',
-              }}
-              onClick={() => !bloque.reservado && setSelectedBloque(bloque.id)}
-            >
-              {bloque.horaInicio} - {bloque.horaFin}
-            </div>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th>Bloque</th>
+                {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map((day, index) => (
+                  <th key={index}>{day}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(10)].map((_, blockIndex) => (
+                <tr key={blockIndex + 1}>
+                  <td>{blockIndex * 2 + 1}-{blockIndex * 2 + 2}</td>
+                  {[...Array(7)].map((_, dayIndex) => {
+                    const dia = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'][dayIndex];
+                    const bloque = `${dia}-${blockIndex + 1}`;
+                    const hasHorario = horarios.some(horario => horario.dia === dia && horario.bloque === `${blockIndex + 1}`);
+                    const isReserved = isBlockReserved(bloque);
+                    const isSelected = selectedBloque === bloque;
+                    return (
+                      <td
+                        key={dayIndex + 1}
+                        style={{
+                          backgroundColor: isSelected ? 'green' : hasHorario ? 'yellow' : isReserved ? 'red' : 'white',
+                          cursor: hasHorario && !isReserved ? 'pointer' : 'default',
+                        }}
+                        onClick={() => {
+                          if (isSelected) {
+                            setSelectedBloque(null);
+                          } else if (hasHorario && !isReserved) {
+                            setSelectedBloque(bloque);
+                          }
+                        }}
+                      ></td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <button onClick={handleReservation} style={{ marginTop: '20px' }}>
           Confirmar Reserva
@@ -75,5 +120,13 @@ function Reservations() {
     </div>
   );
 }
+
+// Estilos
+const styles = {
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+  },
+};
 
 export default Reservations;

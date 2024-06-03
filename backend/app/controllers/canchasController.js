@@ -13,6 +13,31 @@ const canchaOptions = {
     ]
 };
 
+exports.showAll = (request, response) => {
+    let filters = {};
+
+    if (request.query.tipo) {
+        filters.tipo = request.query.tipo;
+    }
+
+    if (request.query.ubicacion) {
+        filters.ubicacion = request.query.ubicacion;
+    }
+
+    return Cancha.findAll({
+        where: filters
+    })
+    .then(canchas => {
+        if (canchas.length === 0) {
+            return response.status(404).send({ message: 'No se encontraron canchas' });
+        }
+        response.status(200).send({ canchas });
+    })
+    .catch(error => response.status(400).send(error));
+};
+
+
+
 exports.show = (request, response) => {
     return Cancha.findByPk(request.params.id, canchaOptions)
     .then(cancha => {

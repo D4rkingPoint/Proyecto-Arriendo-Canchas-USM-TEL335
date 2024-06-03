@@ -30,7 +30,7 @@ exports.update = async (request, response) => {
   return await Reservation.update( {
     fecha: request.body.fecha,
     bloque: request.body.bloque,
-    estado: request.body.estado,
+    estado: "Sin confirmar",
     userId: request.userId
   } , {})
   .then( newReserve => Reservation.findByPk( newReserve.id, {} )

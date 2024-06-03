@@ -14,7 +14,6 @@ function Login() {
     try {
       
       const response = await api.post('/auth/signin', { email, password });
-      console.log(response.data.accessToken)
       localStorage.setItem('token', response.data.accessToken);
       history.push('/usuario/Home_Usuario');
     } catch (error) {

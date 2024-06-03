@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Horario.init({
     canchaId: DataTypes.INTEGER,
-    start_time: DataTypes.DATEONLY,
-    end_time: DataTypes.DATEONLY,
+    dia: DataTypes.STRING,
+    bloque: DataTypes.STRING,
     estado: DataTypes.BOOLEAN
   }, {
     sequelize,
