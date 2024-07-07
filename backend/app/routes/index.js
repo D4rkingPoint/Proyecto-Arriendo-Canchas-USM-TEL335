@@ -4,4 +4,6 @@ module.exports = app => {
     require( "../routes/userRoutes" )( app );
     require( "../routes/canchaRoutes" )( app );
     require( "../routes/horarioRoutes" )( app );
+    require( "../routes/notificationRoutes" )( app );
+    require( "../routes/statRoutes" )( app );
   };

@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
     tipo: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     mensaje: DataTypes.STRING,
-    fecha_envio: DataTypes.DATEONLY
+    fecha_envio: DataTypes.DATEONLY,
+    visto: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Notificacion',

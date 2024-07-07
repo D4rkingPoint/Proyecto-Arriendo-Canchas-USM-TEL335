@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavbarAdmin from '../../components/Navbar_admin';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import api from '../../api';
 
 function Gestion_Usuarios() {
+  const [users, setUsers] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+
+  useEffect(() => {
+    // Fetch users with reservation info
+    api.get('/users')
+      .then(response => setUsers(response.data.users))
+      .catch(error => console.error('Error fetching users:', error));
+  }, []);
 
   // Función para manejar la selección de usuario
   const handleUserSelect = (user) => {
@@ -22,10 +31,24 @@ function Gestion_Usuarios() {
 
   // Función para deshabilitar al usuario seleccionado
   const handleDisableUser = () => {
-    // Aquí puedes implementar la lógica para deshabilitar al usuario
-    console.log('Usuario deshabilitado:', selectedUser);
-    console.log('Fecha seleccionada:', selectedDate);
-    setShowConfirmation(false); // Ocultar el popup después de confirmar
+    api.post(`/users/${selectedUser.id}/disable`, { disableDate: selectedDate })
+      .then(response => {
+        setShowConfirmation(false); // Ocultar el popup después de confirmar
+        // Actualizar la lista de usuarios
+        setUsers(users.map(user => user.id === selectedUser.id ? { ...user, disabledUntil: selectedDate, disabled: true } : user));
+      })
+      .catch(error => console.error('Error disabling user:', error));
+  };
+
+  // Función para habilitar al usuario seleccionado
+  const handleEnableUser = () => {
+    api.post(`/users/${selectedUser.id}/enable`)
+      .then(response => {
+        setShowConfirmation(false); // Ocultar el popup después de confirmar
+        // Actualizar la lista de usuarios
+        setUsers(users.map(user => user.id === selectedUser.id ? { ...user, disabledUntil: null, disabled: false } : user));
+      })
+      .catch(error => console.error('Error enabling user:', error));
   };
 
   // Función para cancelar la acción de deshabilitar usuario
@@ -33,13 +56,6 @@ function Gestion_Usuarios() {
     setSelectedUser(null); // Limpiar la selección de usuario
     setShowConfirmation(false); // Ocultar el popup de confirmación
   };
-
-  // Ejemplos de usuarios
-  const users = [
-    { id: 1, username: 'usuario1', carrera: 'Ingeniería Civil', reservas: 5 },
-    { id: 2, username: 'usuario2', carrera: 'Ingeniería Informática', reservas: 10 },
-    { id: 3, username: 'usuario3', carrera: 'Ingeniería Eléctrica', reservas: 8 },
-  ];
 
   return (
     <div>
@@ -50,33 +66,45 @@ function Gestion_Usuarios() {
           {users.map((user) => (
             <div key={user.id} style={styles.userContainer}>
               <div style={styles.userInfo}>
-                <h2>{user.username}</h2>
+                <h2>{user.nombre} {user.apellido}</h2>
                 <div>
-                  Carrera: {user.carrera} | Reservas: {user.reservas}
+                  Reservas: {user.totalReservas} | Confirmadas: {user.reservasConfirmadas} | Anuladas: {user.reservasAnuladas} | Sin Confirmar: {user.reservasSinConfirmar}
                 </div>
               </div>
               <div style={styles.userActions}>
-                <button onClick={() => handleUserSelect(user)} style={styles.disableButton}>Deshabilitar</button>
+                {user.is_admin ? (
+                  <button disabled style={styles.adminButton}>Admin</button>
+                ) : user.disabled ? (
+                  <button onClick={() => handleUserSelect(user)} style={styles.enableButton}>Habilitar</button>
+                ) : (
+                  <button onClick={() => handleUserSelect(user)} style={styles.disableButton}>Deshabilitar</button>
+                )}
               </div>
             </div>
           ))}
         </div>
         {showConfirmation && (
           <div style={styles.confirmationPopup}>
-            <h2>Deshabilitar Usuario</h2>
-            <p>¿Estás seguro de que deseas deshabilitar al usuario "{selectedUser.username}"?</p>
+            <h2>{selectedUser.disabled ? 'Habilitar Usuario' : 'Deshabilitar Usuario'}</h2>
+            <p>¿Estás seguro de que deseas {selectedUser.disabled ? 'habilitar' : 'deshabilitar'} al usuario "{selectedUser.nombre} {selectedUser.apellido}"?</p>
             <div style={styles.popupContent}>
-              <div>
-                <h3>Seleccionar fecha de inicio de la inhabilitación</h3>
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={handleDateSelect}
-                  minDate={new Date()}
-                  dateFormat="yyyy-MM-dd"
-                />
-              </div>
+              {!selectedUser.disabled && (
+                <div>
+                  <h3>Seleccionar fecha de inicio de la inhabilitación</h3>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDateSelect}
+                    minDate={new Date()}
+                    dateFormat="yyyy-MM-dd"
+                  />
+                </div>
+              )}
               <div style={styles.popupButtons}>
-                <button onClick={handleDisableUser} disabled={!selectedDate} style={styles.confirmButton}>Confirmar</button>
+                {!selectedUser.disabled ? (
+                  <button onClick={handleDisableUser} disabled={!selectedDate} style={styles.confirmButton}>Confirmar</button>
+                ) : (
+                  <button onClick={handleEnableUser} style={styles.confirmButton}>Confirmar</button>
+                )}
                 <button onClick={handleCancelDisable} style={styles.cancelButton}>Cancelar</button>
               </div>
             </div>
@@ -90,8 +118,8 @@ function Gestion_Usuarios() {
 const styles = {
   container: {
     padding: '20px',
-    maxWidth: '800px', // Establece el ancho máximo del contenedor
-    margin: '0 auto', // Centra el contenedor horizontalmente
+    maxWidth: '800px',
+    margin: '0 auto',
   },
   userList: {
     maxHeight: '300px',
@@ -112,8 +140,25 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
   },
+  adminButton: {
+    backgroundColor: '#F7C650',
+    color: 'white',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+
   disableButton: {
     backgroundColor: 'red',
+    color: 'white',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  enableButton: {
+    backgroundColor: 'green',
     color: 'white',
     border: 'none',
     padding: '8px 16px',
@@ -141,7 +186,7 @@ const styles = {
     marginTop: '20px',
   },
   confirmButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'blue',
     color: 'white',
     border: 'none',
     padding: '8px 16px',

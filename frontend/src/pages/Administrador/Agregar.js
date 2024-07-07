@@ -24,20 +24,6 @@ function Agregar() {
     );
   };
 
-  const calculateTimes = (block) => {
-    const startTimes = [
-      '08:15', '09:35', '10:55', '12:15', '14:30', '15:50', '17:10', '18:30', '19:50', '21:10'
-    ];
-    const endTimes = [
-      '09:25', '10:45', '12:05', '13:25', '15:40', '17:00', '18:20', '19:40', '21:00', '22:20'
-    ];
-  
-    const index = Math.floor((block - 1) / 2);
-    return {
-      start_time: startTimes[index],
-      end_time: endTimes[index]
-    };
-  };
 
   const handleAddCancha = async () => {
     try {

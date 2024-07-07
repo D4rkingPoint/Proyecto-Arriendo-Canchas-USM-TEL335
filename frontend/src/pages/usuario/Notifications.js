@@ -9,8 +9,8 @@ function Notifications() {
   useEffect(() => {
     async function fetchNotifications() {
       try {
-        const response = await api.get('/user/notifications'); // Ajusta la URL según tu API
-        setNotifications(response.data);
+        const response = await api.get('/notificaciones'); // Ajusta la URL según tu API
+        setNotifications(response.data.notificaciones);
       } catch (error) {
         console.error('Error fetching notifications', error);
       }
@@ -28,9 +28,9 @@ function Notifications() {
           {notifications.length > 0 ? (
             notifications.map(notification => (
               <li key={notification.id}>
-                <h3>{notification.title}</h3>
-                <p>{notification.message}</p>
-                <p><strong>Fecha:</strong> {new Date(notification.date).toLocaleString()}</p>
+                <h3>{notification.tipo}</h3>
+                <p>{notification.mensaje}</p>
+                <p><strong>Fecha:</strong> {new Date(notification.fecha_envio).toLocaleString()}</p>
               </li>
             ))
           ) : (

@@ -6,18 +6,26 @@ import Logo from '../styles/img/Logo_UTFSM.png';
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const history = useHistory();
 
   const handleSubmit = async (event) => {
-    console.log(email,password)
     event.preventDefault();
     try {
-      
       const response = await api.post('/auth/signin', { email, password });
       localStorage.setItem('token', response.data.accessToken);
-      history.push('/usuario/Home_Usuario');
+      localStorage.setItem('isAdmin', response.data.isAdmin);
+      if (response.data.isAdmin) {
+        history.push('/admin/estadisticas');
+      } else {
+        history.push('/usuario/Home_Usuario');
+      }
     } catch (error) {
-      console.error("Inicio de sesión fallido", error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error); // Actualiza el mensaje de error
+      } else {
+        setError("Inicio de sesión fallido. Por favor, inténtalo de nuevo.");
+      }
     }
   };
 
@@ -40,6 +48,12 @@ function Login() {
     marginTop: '20px'
   };
 
+  const errorStyle = {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: '10px'
+  };
+
   return (
     <div>
       <a href="/">
@@ -47,6 +61,7 @@ function Login() {
       </a>
       <div style={containerStyle} className="container">
         <h1 style={{ fontSize: '1.5rem', textAlign: 'center' }}>Ingresa tus credenciales para iniciar sesión</h1>
+        {error && <div style={errorStyle}>{error}</div>} {/* Muestra el mensaje de error si existe */}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <form onSubmit={handleSubmit}>
             <table>
@@ -65,7 +80,7 @@ function Login() {
                 </tr>
                 <tr>
                   <td colSpan="2">
-                  <button type="button" onClick={handleSubmit} style={{ width: '100%' }}>Iniciar Sesión</button>
+                    <button type="submit" style={{ width: '100%' }}>Iniciar Sesión</button>
                   </td>
                 </tr>
               </tbody>
@@ -77,9 +92,6 @@ function Login() {
           <br />
           <span onClick={() => history.push('/password-recovery')} style={{ color: 'blue', cursor: 'pointer' }}>Recuperar contraseña</span>
           <br />
-          <button type="button" onClick={() => history.push('/usuario/home_usuario')} style={{ width: '100%', marginTop: '20px', padding: '10px 20px' }}>Sesión usuario prueba</button>
-          <br />
-          <button type="button" onClick={() => history.push('/admin/estadisticas')} style={{ width: '100%', marginTop: '20px', padding: '10px 20px' }}>Sesión administrador prueba</button>
         </div>
       </div>
     </div>

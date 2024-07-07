@@ -12,6 +12,19 @@ exports.show = (request, response) => {
       .catch(error => response.status(400).send(error));
   };
 
+exports.showAll = (request, response) => {
+  const userId = request.userId;
+
+  return Notificacion.findAll({ where: { userId } })
+    .then(notificaciones => {
+      if (notificaciones.length === 0) {
+        return response.status(404).send({ message: 'No se encontraron notificaciones' });
+      }
+      response.status(200).send({ notificaciones });
+    })
+    .catch(error => response.status(400).send(error));
+};
+
 exports.create = async ( request, response ) => {
     return await Notificacion.create( {
         tipo: request.body.tipo,

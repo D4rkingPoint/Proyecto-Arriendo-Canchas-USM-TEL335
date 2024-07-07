@@ -18,14 +18,16 @@ exports.signUp = ( request, response ) => {
 }
 
 exports.signIn = ( request, response ) => {
-    const signInError = { accessToken: null, error: "Invalid email or password" }; 
-  return User.findOne( { where: { email: request.body.email } } )
-    .then( user => {
-        if ( !user ) return response.status( 401 ).send( signInError );
-        const validPassword = bcrypt.compareSync( request.body.password, user.password );
-        if ( !validPassword ) return response.status( 401 ).send( signInError );
-        const token = jwt.sign( { id: user.id , role:user.is_admin }, config.secret, { expiresIn: 86400 } );
-        response.status( 200 ).send( { id: user.id, email: user.email, accessToken: token } );
-    } )
-    .catch( error => response.status( 500 ).send( error ) );
+    const signInError = { accessToken: null, error: "Contraseña o Email invalidos" }; 
+    const signInNotValid = { accessToken: null, error: "El usuario esta deshabilitado" }; 
+    return User.findOne( { where: { email: request.body.email } } )
+        .then( user => {
+            if ( !user ) return response.status( 401 ).send( signInError );
+            const validPassword = bcrypt.compareSync( request.body.password, user.password );
+            if ( !validPassword ) return response.status( 401 ).send( signInError );
+            if (user.disable) return response.status( 401 ).send( signInNotValid );
+            const token = jwt.sign( { id: user.id , role:user.is_admin }, config.secret, { expiresIn: 86400 } );
+            response.status(200).send({ id: user.id, email: user.email, isAdmin: user.is_admin, accessToken: token });
+        } )
+        .catch( error => response.status( 500 ).send( error ) );
 }

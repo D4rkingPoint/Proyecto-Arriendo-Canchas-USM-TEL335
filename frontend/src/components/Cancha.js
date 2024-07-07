@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
 
-
-function Cancha({ cancha }) {
+function Cancha({ cancha, onDisable }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  // Función para deshabilitar la cancha
   const handleDisableCancha = () => {
     setShowConfirmation(true);
   };
 
-  // Función para confirmar la deshabilitación de la cancha
   const handleConfirmDisable = () => {
-    // Lógica para deshabilitar la cancha
-    console.log('Cancha deshabilitada:', cancha.nombre);
+    onDisable(cancha.id);
     setShowConfirmation(false);
   };
 
-  // Función para cancelar la deshabilitación de la cancha
   const handleCancelDisable = () => {
     setShowConfirmation(false);
   };
@@ -24,13 +19,13 @@ function Cancha({ cancha }) {
   return (
     <div style={styles.container}>
       <div>
-        <img src={cancha.imagen} alt={cancha.nombre} style={styles.image} />
+        <img src={cancha.fotografia} alt={cancha.nombre} style={styles.image} />
       </div>
       <div style={styles.info}>
         <h2>{cancha.nombre}</h2>
-        <p>Horario: {cancha.horario}</p>
-        <p>Detalles: {cancha.detalles}</p>
-        <p>Reservas: {cancha.reservas}</p>
+        <p>Tipo: {cancha.tipo}</p>
+        <p>Ubicación: {cancha.ubicacion}</p>
+        <p>Disponible: {cancha.estado_disponibilidad ? 'Sí' : 'No'}</p>
       </div>
       <div style={styles.actions}>
         <button onClick={handleDisableCancha} style={styles.disableButton}>Deshabilitar</button>

@@ -33,7 +33,15 @@ module.exports = {
            key: "id",
            as: "userId"
         }
-     }
+      },
+      canchaId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Canchas",
+          key: "id",
+          as: "canchaId"
+        }
+      }
     });
   },
   async down(queryInterface, Sequelize) {

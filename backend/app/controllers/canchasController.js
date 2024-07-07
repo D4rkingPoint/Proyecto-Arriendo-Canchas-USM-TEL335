@@ -67,11 +67,25 @@ exports.update = async (request, response) => {
         ubicacion: request.body.ubicacion,
         fotografia: request.body.fotografia,
         estado_disponibilidad: request.body.estado_disponibilidad        
-    } ,{})
-    .then(newCancha => Cancha.findByPk(newCancha.id,{}))
-        .then(newCancha => response.status(201).send(newCancha))
-        .catch(error => response.status(400).send(error));
+    }, {
+        where: {
+            id: request.params.id
+        },
+        returning: true,
+        plain: true
+    })
+    .then(updatedCancha => response.status(200).send(updatedCancha[1]))
+    .catch(error => response.status(400).send(error));
 };
+
+exports.disable = async (request, response) => {
+    return await Cancha.update(
+        { estado_disponibilidad: false },
+        { where: { id: request.params.id }, returning: true, plain: true }
+    )
+    .then(updatedCancha => response.status(200).send(updatedCancha[1]))
+    .catch(error => response.status(400).send(error));
+};  
 
 exports.delete = async (request, response) => {
     return await Cancha.destroy({

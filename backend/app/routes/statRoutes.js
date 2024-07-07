@@ -1,0 +1,8 @@
+const estadisticasController = require('../controllers/statsController');
+const { authorizeJwt } = require( "../middleware" );
+
+module.exports = app => {
+    app.get('/estadisticas/horario', [ authorizeJwt.verifyToken ], estadisticasController.getReservationsByBlock);
+    app.get('/estadisticas/frecuencia', [ authorizeJwt.verifyToken ], estadisticasController.getFrecuenciaData);
+    app.get('/estadisticas/pie', [ authorizeJwt.verifyToken ], estadisticasController.getPieData);
+ };

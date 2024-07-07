@@ -24,7 +24,6 @@ exports.showCancha = (request, response) => {
 };
 
 exports.create = async (request, response) => {
-    console.log(request.body)
     return await Horario.create({
         canchaId: request.body.canchaId,
         dia: request.body.dia,

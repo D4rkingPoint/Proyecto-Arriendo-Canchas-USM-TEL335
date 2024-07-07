@@ -12,7 +12,6 @@ function Navbar() {
       <nav>
         <ul>
           <li><Link to="/usuario/home_usuario">Inicio</Link></li>
-          <li><Link to="/usuario/reservations">Mis Reservas</Link></li>
           <li><Link to="/usuario/notifications"><i className="fa fa-bell"></i> Notificaciones</Link></li>
           <li><Link to="/usuario/profile">Perfil</Link></li>
           <li><Link to="/logout">Cerrar Sesión</Link></li>

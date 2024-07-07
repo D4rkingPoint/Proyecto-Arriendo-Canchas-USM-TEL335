@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import DatePicker from 'react-datepicker';
+import { startOfWeek, addDays, format, setDay } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import api from '../../api';
 
@@ -12,6 +13,7 @@ function Reservations() {
   const [horarios, setHorarios] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [selectedBloque, setSelectedBloque] = useState(null);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
 
   useEffect(() => {
     async function fetchHorarios() {
@@ -28,13 +30,14 @@ function Reservations() {
     async function fetchReservations() {
       try {
         const response = await api.get(`/reservations`, {
-          params: { canchaId, date: selectedDate.toISOString().split('T')[0] },
+          params: { canchaId, fecha: selectedDate.toISOString().split('T')[0] },
         });
-        setReservations(response.data);
+        setReservations(response.data.reservas);
       } catch (error) {
         console.error('Error fetching reservations', error);
       }
     }
+
     fetchHorarios();
     fetchReservations();
   }, [selectedDate, canchaId]);
@@ -42,9 +45,13 @@ function Reservations() {
   const handleReservation = async () => {
     if (selectedBloque && window.confirm('¿Estás seguro de que deseas realizar la reserva de esta cancha?')) {
       try {
-        await api.post('/reservations', {
-          fecha: selectedDate.toISOString().split('T')[0],
-          bloque: selectedBloque,
+        const dayOfWeek = selectedDayIndex+1; // 0 for Sunday, 1 for Monday, etc.
+        const newDate = setDay(selectedDate, dayOfWeek, { weekStartsOn: 1 }); // Setting the day of the week
+        const formattedDate = format(newDate, 'yyyy-MM-dd');
+        await api.post('/reservar', {
+          fecha: formattedDate,
+          bloque: selectedBloque+1,
+          canchaId: canchaId
         });
         alert('Reservación exitosa. Se envió un correo con la confirmación de la reserva');
         history.push('/usuario/home_usuario');
@@ -54,8 +61,10 @@ function Reservations() {
     }
   };
 
-  const isBlockReserved = (bloque) => {
-    return reservations.some(reservation => reservation.bloque === bloque);
+  const isBlockReserved = (bloque, day) => {
+    const newDate = setDay(selectedDate, day, { weekStartsOn: 1 });
+    const formattedDate = format(newDate, 'yyyy-MM-dd');
+    return reservations.some(reservation => reservation.bloque === `${bloque}` && reservation.fecha === formattedDate && reservation.estado !== 'Anulada');
   };
 
   return (
@@ -67,6 +76,8 @@ function Reservations() {
           selected={selectedDate}
           onChange={date => setSelectedDate(date)}
           dateFormat="yyyy-MM-dd"
+          showWeekNumbers
+
         />
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
           <table style={styles.table}>
@@ -84,22 +95,33 @@ function Reservations() {
                   <td>{blockIndex * 2 + 1}-{blockIndex * 2 + 2}</td>
                   {[...Array(7)].map((_, dayIndex) => {
                     const dia = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'][dayIndex];
-                    const bloque = `${dia}-${blockIndex + 1}`;
                     const hasHorario = horarios.some(horario => horario.dia === dia && horario.bloque === `${blockIndex + 1}`);
-                    const isReserved = isBlockReserved(bloque);
-                    const isSelected = selectedBloque === bloque;
+                    const isReserved = isBlockReserved(blockIndex + 1, dayIndex + 1);
+                    const isSelected = selectedBloque === blockIndex && selectedDayIndex === dayIndex;
+                    
+                    let backgroundColor = 'white';
+                    if (isReserved) {
+                      backgroundColor = 'red';
+                    } else if (isSelected) {
+                      backgroundColor = 'green';
+                    } else if (hasHorario) {
+                      backgroundColor = 'yellow';
+                    }
+
                     return (
                       <td
                         key={dayIndex + 1}
                         style={{
-                          backgroundColor: isSelected ? 'green' : hasHorario ? 'yellow' : isReserved ? 'red' : 'white',
+                          backgroundColor: backgroundColor,
                           cursor: hasHorario && !isReserved ? 'pointer' : 'default',
                         }}
                         onClick={() => {
                           if (isSelected) {
                             setSelectedBloque(null);
+                            setSelectedDayIndex(null);
                           } else if (hasHorario && !isReserved) {
-                            setSelectedBloque(bloque);
+                            setSelectedBloque(blockIndex);
+                            setSelectedDayIndex(dayIndex);
                           }
                         }}
                       ></td>

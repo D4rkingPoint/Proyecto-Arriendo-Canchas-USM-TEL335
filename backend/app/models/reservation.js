@@ -10,12 +10,18 @@ module.exports = (sequelize, DataTypes) => {
         as: 'user',
         onDelete: 'CASCADE',
      } );
+     Reservation.belongsTo(models.Cancha, {
+      foreignKey: 'canchaId',
+      as: 'cancha',
+      onDelete: 'CASCADE',
+    });
     }
   }
   Reservation.init({
     fecha: DataTypes.DATEONLY,
     bloque: DataTypes.STRING,
-    estado: DataTypes.STRING
+    estado: DataTypes.STRING,
+    confirmationToken: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Reservation',
