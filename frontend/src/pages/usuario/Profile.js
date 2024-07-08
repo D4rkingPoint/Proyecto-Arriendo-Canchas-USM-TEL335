@@ -18,7 +18,8 @@ function Profile() {
         const unconfirmedResponse = await api.get('/reservations', {
           params: { estado: 'Sin Confirmar' }
         });
-        setActiveReservations(unconfirmedResponse.data.reservas);
+        setActiveReservations(unconfirmedResponse.data.reservations);
+        console.log(activeReservations)
       } catch (error) {
         console.error('Error fetching unconfirmed reservations', error);
       }
@@ -27,7 +28,7 @@ function Profile() {
         const confirmedResponse = await api.get('/reservations', {
           params: { estado: 'Confirmada' }
         });
-        setConfirmedReservations(confirmedResponse.data.reservas);
+        setConfirmedReservations(confirmedResponse.data.reservations);
       } catch (error) {
         console.error('Error fetching confirmed reservations', error);
       }
@@ -36,7 +37,7 @@ function Profile() {
         const cancelledResponse = await api.get('/reservations', {
           params: { estado: 'Anulada' }
         });
-        setCancelledReservations(cancelledResponse.data.reservas);
+        setCancelledReservations(cancelledResponse.data.reservations  );
       } catch (error) {
         console.error('Error fetching cancelled reservations', error);
       }
@@ -60,6 +61,7 @@ function Profile() {
   };
 
   const confirmReservation = async (token) => {
+    console.log(token)
     if (window.confirm('¿Está seguro de que desea confirmar la reserva?')) {
       try {
         await api.get(`/confirm/${token}`);
@@ -86,7 +88,7 @@ function Profile() {
           <div style={{ flex: 1, marginRight: '10px', maxHeight: '400px', overflow: 'auto' }}>
             {activeReservations.length > 0 ? (
               activeReservations.map(res => (
-                <div key={res.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                <div key={res.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', background: 'white' }}>
                   <p>{res.cancha.nombre}</p>
                   <p>Fecha: {res.fecha}</p>
                   <button onClick={() => cancelReservation(res.id)}>Cancelar reserva</button>

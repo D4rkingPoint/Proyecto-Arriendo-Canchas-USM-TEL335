@@ -1,54 +1,60 @@
 const { Reservation, User, Cancha, Notificacion } = require('../models');
 const crypto = require('crypto');
-const { startOfWeek, endOfWeek, format } = require('date-fns');
+const { startOfWeek, endOfWeek, format, addDays } = require('date-fns');
 const { Op } = require('sequelize');
 const { sendMail } = require('../utils/mailer');
 
 
 const generateToken = () => crypto.randomBytes(20).toString('hex');
 
-exports.showAll = (request, response) => {
-  let filters = {};
-  let include = [];
+exports.showAll = async (request, response) => {
+  try {
+    let filters = {};
+    let include = [];
 
-  if (request.query.estado) {
-    filters.estado = request.query.estado;
-  }
+    if (request.query.estado) {
+      filters.estado = request.query.estado;
+    }
 
-  if (request.query.canchaId) {
-    filters.canchaId = request.query.canchaId;
-  } else {
-    filters.userId = request.userId;
-    include.push({
-      model: Cancha,
-      as: 'cancha', // Usa el alias definido en la asociación
-      attributes: ['nombre'] // Ajusta los atributos según el modelo Cancha
-    });
+    if (request.query.canchaId) {
+      filters.canchaId = request.query.canchaId;
+    } else {
+      filters.userId = request.userId;
+      include.push({
+        model: Cancha,
+        as: 'cancha', // Usa el alias definido en la asociación
+        attributes: ['nombre'] // Ajusta los atributos según el modelo Cancha
+      });
 
-  }
+    }
 
-  if (request.query.fecha) {
-    const startDate = format(startOfWeek(new Date(request.query.fecha), { weekStartsOn: 0 }), 'yyyy-MM-dd');
-    const endDate = format(endOfWeek(new Date(request.query.fecha), { weekStartsOn: 0 }), 'yyyy-MM-dd');
-    filters.fecha = {
-      [Op.between]: [startDate, endDate]
-    };
-  }
+    if (request.query.fecha) {
+      const selectedDate = new Date(request.query.fecha);
+      const startOfWeekDate = startOfWeek(selectedDate, { weekStartsOn: 0 });
+      const endOfWeekDate = addDays(startOfWeekDate, 7); 
+      const startDate = format(startOfWeekDate, 'yyyy-MM-dd');
+      const endDate = format(endOfWeekDate, 'yyyy-MM-dd');
+      filters.fecha = {
+        [Op.between]: [startDate, endDate]
+      };
+    }
 
-  return Reservation.findAll({
-    where: filters,
-    include: include
-  })
-    .then(reservas => {
-      if (reservas.length === 0) {
-        return response.status(404).send({ message: 'No se encontraron reservaciones' });
-      }
-      response.status(200).send({ reservas });
-      
+    const reservations = await Reservation.findAll({
+      where: filters,
+      include: include
     })
-    .catch(error => {
-      response.status(400).send(error)
-    });
+
+    if (reservations.length === 0) {
+      return response.status(404).send({ message: 'No se encontraron reservaciones' });
+    }
+
+    response.status(200).send({ reservations });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send({ message: 'Error creating reservation' });
+  }
+
+  
 };
 
 exports.show = (request, response) => {
@@ -70,6 +76,7 @@ exports.create = async ( request, response ) => {
   const userId = request.userId;
   const confirmationToken = generateToken();
 
+
   try {
     const reservation = await Reservation.create({
       fecha,
@@ -83,7 +90,7 @@ exports.create = async ( request, response ) => {
     const cancha = await Cancha.findByPk(canchaId);
     const confirmationUrl = `http://127.0.0.1:8000/confirm/${confirmationToken}`;
     const mensaje1 = `Tu reserva para la cancha ${cancha.nombre} en el bloque ${bloque}(${Bloques[bloque+1]}) ha sido agendada para el día ${fecha}.`;
-    const mensaje2 = `Tu reserva para la cancha ${cancha.nombre} en el bloque ${bloque}(${Bloques[bloque+1]}) ha sido agendada para el día ${fecha}. Por favor, confirma tu reserva haciendo clic en el siguiente enlace: ${confirmationUrl}. Si no confirmas al menos 1 hora antes de la hora seleccionada, se anualara tu reserva. `;
+    const mensaje2 = `Tu reserva para la cancha ${cancha.nombre} en el bloque ${bloque}(${Bloques[bloque+1]}) ha sido agendada para el día ${fecha}. Por favor, confirma tu reserva haciendo clic en el siguiente enlace: ${confirmationUrl}. Si no confirmas al menos 15 minutos antes de la hora seleccionada, se anulara tu reserva. `;
 
 
 
@@ -99,7 +106,7 @@ exports.create = async ( request, response ) => {
       await sendMail(user.email, 'Confirma tu reserva', mensaje2);
     }
 
-    response.status(201).send(reservation);
+    response.status(200).send(reservation);
   } catch (error) {
     console.error('Error creating reservation', error);
     response.status(500).send({ message: 'Error creating reservation' });
@@ -137,7 +144,7 @@ exports.confirm = async (request, response) => {
 
     response.status(200).send({ message: 'Reservation confirmed successfully' });
   } catch (error) {
-    console.error('Error confirming reservation', error);
+    console.log(error)
     response.status(500).send({ message: 'Error confirming reservation' });
   }
 };

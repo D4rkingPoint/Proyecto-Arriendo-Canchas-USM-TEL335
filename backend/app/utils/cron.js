@@ -45,7 +45,7 @@ const checkAndUpdateReservations = async () => {
       const reservationDateTime = new Date(reservation.fecha);
       reservationDateTime.setHours(hours, minutes, 0, 0);
 
-      if (reservationDateTime - now <= 60 * 60 * 1000) {
+      if (reservationDateTime - now <= 15 * 60 * 1000) {
         const message = `Tu reserva para el bloque ${reservation.bloque} el ${reservation.fecha} ha sido anulada debido a la falta de confirmación.`;
         await sendNotification(reservation.userId, message, "Reserva Anulada");
         

@@ -12,18 +12,21 @@ exports.show = (request, response) => {
       .catch(error => response.status(400).send(error));
   };
 
-exports.showAll = (request, response) => {
-  const userId = request.userId;
-
-  return Notificacion.findAll({ where: { userId } })
-    .then(notificaciones => {
-      if (notificaciones.length === 0) {
-        return response.status(404).send({ message: 'No se encontraron notificaciones' });
-      }
-      response.status(200).send({ notificaciones });
+  exports.showAll = (request, response) => {
+    const userId = request.userId;
+  
+    return Notificacion.findAll({
+      where: { userId },
+      order: [['createdAt', 'DESC']]
     })
-    .catch(error => response.status(400).send(error));
-};
+      .then(notificaciones => {
+        if (notificaciones.length === 0) {
+          return response.status(404).send({ message: 'No se encontraron notificaciones' });
+        }
+        response.status(200).send({ notificaciones });
+      })
+      .catch(error => response.status(400).send(error));
+  };
 
 exports.create = async ( request, response ) => {
     return await Notificacion.create( {
@@ -59,4 +62,13 @@ exports.delete = async ( request, response ) => {
     } )
     .then( notificacion => response.status(200).send( notificacion ) )
     .catch( error => response.status(400).send( error ) )
+};
+
+exports.markAsRead = async (request, response) => {
+  return await Notificacion.update(
+    { visto: true },
+    { where: { id: request.params.notificacionId } }
+  )
+    .then(() => response.status(200).send({ message: 'Notificación marcada como leída' }))
+    .catch(error => response.status(400).send(error));
 };

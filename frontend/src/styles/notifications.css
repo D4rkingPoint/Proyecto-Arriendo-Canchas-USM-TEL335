@@ -1,4 +1,5 @@
 .notifications-container {
+  overflow-y: auto;
   margin-top: 80px; /* Espacio superior para compensar la barra de navegación fija */
   padding: 20px;
   background-color: #fff;
@@ -7,27 +8,34 @@
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  position: relative; /* Agrega esta línea para establecer el contexto de posicionamiento */
-  z-index: 1; /* Agrega esta línea para asegurarte de que el contenedor de las notificaciones esté por encima de la barra de navegación */
+  position: relative; /* Establece el contexto de posicionamiento */
+  z-index: 1; /* Asegura que el contenedor de las notificaciones esté por encima de la barra de navegación */
 }
-  
-  .notifications-container h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .notifications-container ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .notifications-container ul li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .notifications-container ul li:last-child {
-    border-bottom: none;
-  }
-  
+
+.notifications-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.notifications-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notifications-container ul li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notifications-container ul li:last-child {
+  border-bottom: none;
+}
+
+.read {
+  background-color: #f0f0f0;
+}
+
+.unread {
+  background-color: #fff;
+}

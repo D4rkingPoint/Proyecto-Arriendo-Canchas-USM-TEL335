@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { es } from 'date-fns/locale';
 import { startOfWeek, addDays, format, setDay } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import api from '../../api';
+
+// Registrar la configuración regional
+registerLocale('es', es);
 
 function Reservations() {
   const { canchaId } = useParams();
@@ -23,16 +27,17 @@ function Reservations() {
         });
         setHorarios(response.data);
       } catch (error) {
-        console.error('Error fetching horarios', error);
+        error('Error fetching horarios', error);
       }
     }
 
     async function fetchReservations() {
       try {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
         const response = await api.get(`/reservations`, {
-          params: { canchaId, fecha: selectedDate.toISOString().split('T')[0] },
+          params: { canchaId, fecha: formattedDate },
         });
-        setReservations(response.data.reservas);
+        setReservations(response.data.reservations);
       } catch (error) {
         console.error('Error fetching reservations', error);
       }
@@ -40,29 +45,41 @@ function Reservations() {
 
     fetchHorarios();
     fetchReservations();
+    console.log(reservations)
   }, [selectedDate, canchaId]);
 
   const handleReservation = async () => {
-    if (selectedBloque && window.confirm('¿Estás seguro de que deseas realizar la reserva de esta cancha?')) {
-      try {
-        const dayOfWeek = selectedDayIndex+1; // 0 for Sunday, 1 for Monday, etc.
-        const newDate = setDay(selectedDate, dayOfWeek, { weekStartsOn: 1 }); // Setting the day of the week
-        const formattedDate = format(newDate, 'yyyy-MM-dd');
-        await api.post('/reservar', {
-          fecha: formattedDate,
-          bloque: selectedBloque+1,
-          canchaId: canchaId
-        });
-        alert('Reservación exitosa. Se envió un correo con la confirmación de la reserva');
-        history.push('/usuario/home_usuario');
-      } catch (error) {
-        console.error('Error making reservation', error);
+    if (Number.isInteger(selectedBloque)) {
+      const dayOfWeek = selectedDayIndex + 1;
+      const newDate = setDay(selectedDate, dayOfWeek, { weekStartsOn: 0 }); 
+      const formattedDate = format(newDate, 'yyyy-MM-dd');
+      const today = new Date();
+      const formattedToday = format(today, 'yyyy-MM-dd');
+      
+      console.log()
+      if (formattedDate < formattedToday) {
+        alert('No se puede realizar una reserva para una fecha anterior a la fecha actual.');
+        return;
+      }
+  
+      if (window.confirm('¿Estás seguro de que deseas realizar la reserva de esta cancha?')) {
+        try {
+          await api.post('/reservar', {
+            fecha: formattedDate,
+            bloque: selectedBloque + 1,
+            canchaId: canchaId
+          });
+          alert('Reservación exitosa. Se envió un correo con la confirmación de la reserva.');
+          history.push('/usuario/home_usuario');
+        } catch (error) {
+          console.error('Error making reservation', error);
+        }
       }
     }
   };
 
   const isBlockReserved = (bloque, day) => {
-    const newDate = setDay(selectedDate, day, { weekStartsOn: 1 });
+    const newDate = setDay(selectedDate, day, { weekStartsOn: 0 });
     const formattedDate = format(newDate, 'yyyy-MM-dd');
     return reservations.some(reservation => reservation.bloque === `${bloque}` && reservation.fecha === formattedDate && reservation.estado !== 'Anulada');
   };
@@ -74,10 +91,11 @@ function Reservations() {
         <h1>Reservar Cancha</h1>
         <DatePicker
           selected={selectedDate}
-          onChange={date => setSelectedDate(date)}
+          onChange={date => {setSelectedDate(date)}}
           dateFormat="yyyy-MM-dd"
           showWeekNumbers
-
+          locale="es"
+          calendarStartDay={1}
         />
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
           <table style={styles.table}>
@@ -107,7 +125,6 @@ function Reservations() {
                     } else if (hasHorario) {
                       backgroundColor = 'yellow';
                     }
-
                     return (
                       <td
                         key={dayIndex + 1}
@@ -124,6 +141,7 @@ function Reservations() {
                             setSelectedDayIndex(dayIndex);
                           }
                         }}
+                        
                       ></td>
                     );
                   })}

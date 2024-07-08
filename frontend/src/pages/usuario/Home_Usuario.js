@@ -70,7 +70,8 @@ function Home_Usuario() {
               <div
                 key={cancha.id}
                 style={{
-                  border: '1px solid #ccc',
+                  background: 'white',
+                  border: '1px solid #A1A1A1',
                   borderRadius: '8px',
                   padding: '10px',
                   width: '200px',

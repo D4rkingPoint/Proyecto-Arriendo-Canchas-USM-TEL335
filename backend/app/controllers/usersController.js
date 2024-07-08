@@ -20,7 +20,7 @@ const userOptions = {
          'nombre',
          'apellido',
          'is_admin',
-         'disable ',
+         'disable',
          [Sequelize.fn('COUNT', Sequelize.col('reservations.id')), 'totalReservas'],
          [Sequelize.fn('SUM', Sequelize.literal(`CASE WHEN reservations.estado = 'Confirmada' THEN 1 ELSE 0 END`)), 'reservasConfirmadas'],
          [Sequelize.fn('SUM', Sequelize.literal(`CASE WHEN reservations.estado = 'Anulada' THEN 1 ELSE 0 END`)), 'reservasAnuladas'],
@@ -72,8 +72,8 @@ exports.create = async ( request, response ) => {
       password: request.body.password,
       nombre: request.body.nombre,
       apellido: request.body.apellido,
-      disable: 0,
-      is_admin: 0
+      disable: false,
+      is_admin: false
     }, {} )
     .then( newUser => User.findByPk( newUser.id, {}))
        .then( newUser => response.status( 201 ).send( newUser ) )
