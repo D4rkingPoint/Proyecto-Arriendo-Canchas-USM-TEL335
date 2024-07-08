@@ -45,7 +45,6 @@ function Reservations() {
 
     fetchHorarios();
     fetchReservations();
-    console.log(reservations)
   }, [selectedDate, canchaId]);
 
   const handleReservation = async () => {
@@ -56,7 +55,6 @@ function Reservations() {
       const today = new Date();
       const formattedToday = format(today, 'yyyy-MM-dd');
       
-      console.log()
       if (formattedDate < formattedToday) {
         alert('No se puede realizar una reserva para una fecha anterior a la fecha actual.');
         return;

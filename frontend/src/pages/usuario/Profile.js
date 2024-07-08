@@ -19,7 +19,6 @@ function Profile() {
           params: { estado: 'Sin Confirmar' }
         });
         setActiveReservations(unconfirmedResponse.data.reservations);
-        console.log(activeReservations)
       } catch (error) {
         console.error('Error fetching unconfirmed reservations', error);
       }
@@ -51,7 +50,7 @@ function Profile() {
   const cancelReservation = async (id) => {
     if (window.confirm('¿Está seguro de que desea cancelar la reserva?')) {
       try {
-        await api.delete(`/reservations/${id}`);
+        await api.delete(`/reservation/${id}`);
         alert('Reserva cancelada con éxito');
         window.location.reload();
       } catch (error) {
@@ -61,7 +60,6 @@ function Profile() {
   };
 
   const confirmReservation = async (token) => {
-    console.log(token)
     if (window.confirm('¿Está seguro de que desea confirmar la reserva?')) {
       try {
         await api.get(`/confirm/${token}`);

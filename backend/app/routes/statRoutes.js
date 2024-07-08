@@ -3,6 +3,6 @@ const { authorizeJwt } = require( "../middleware" );
 
 module.exports = app => {
     app.get('/estadisticas/horario', [ authorizeJwt.verifyToken ], estadisticasController.getReservationsByBlock);
-    app.get('/estadisticas/frecuencia', [ authorizeJwt.verifyToken ], estadisticasController.getFrecuenciaData);
+    app.get('/estadisticas/reservas', [ authorizeJwt.verifyToken ], estadisticasController.getReservationsStats);
     app.get('/estadisticas/pie', [ authorizeJwt.verifyToken ], estadisticasController.getPieData);
  };

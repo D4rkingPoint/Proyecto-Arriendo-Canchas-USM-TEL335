@@ -1,7 +1,7 @@
 // cron.js
 const cron = require('node-cron');
 const { Op } = require('sequelize');
-const { Reservation } = require('../models'); 
+const { Reservation,  Notificacion } = require('../models'); 
 
 
 const Bloques = ['8:15-9:25', '9:35-10:45', '10:55-12:05', '12:15-13:25', '14:30-15:40', '15:50-17:00', '17:10-18:20', '18:30-19:40', '19:50-21:00', '21:10-22:20']

@@ -144,7 +144,6 @@ exports.confirm = async (request, response) => {
 
     response.status(200).send({ message: 'Reservation confirmed successfully' });
   } catch (error) {
-    console.log(error)
     response.status(500).send({ message: 'Error confirming reservation' });
   }
 };

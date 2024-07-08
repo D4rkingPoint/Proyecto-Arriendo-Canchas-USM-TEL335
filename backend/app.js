@@ -6,6 +6,8 @@ require('./app/utils/cron');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const createAdminIfNotExists = require('./app/utils/initialize');
+
 // Middleware
 app.use(bodyParser.json());
 app.use(express.json());
@@ -15,6 +17,10 @@ app.use(cors()); // Habilitar CORS para todas las solicitudes
 require("./app/routes")(app);
 app.get("/", (request, response) => response.send("Test"));
 
-app.listen(PORT, () => {
-    console.log(`Servidor Express corriendo en el puerto ${PORT}`);
-});
+createAdminIfNotExists().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor Express corriendo en el puerto ${PORT}`);
+    });
+  }).catch(error => {
+    console.error('Error al iniciar el servidor:', error);
+  });
